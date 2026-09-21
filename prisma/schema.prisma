@@ -18,6 +18,7 @@ model User {
 
     refreshTokens           RefreshToken[]
     organizationMemberships OrganizationMember[]
+    sentinvites             Invite[]
 }
 
 model RefreshToken {
@@ -48,6 +49,7 @@ model Organization {
     plan      Plan                 @default(FREE)
     createdAt DateTime             @default(now())
     members   OrganizationMember[]
+    invites   Invite[]
 }
 
 model OrganizationMember {
@@ -60,4 +62,18 @@ model OrganizationMember {
     createdAt      DateTime     @default(now())
 
     @@unique([organizationId, userId])
+}
+
+model Invite {
+    id             String       @id @default(uuid())
+    email          String
+    token          String       @unique
+    role           Role         @default(MEMBER)
+    organizationId String
+    organization   Organization @relation(fields: [organizationId], references: [id])
+    invitedById    String
+    invitedBy      User         @relation(fields: [invitedById], references: [id])
+    expiresAt      DateTime
+    accepted       Boolean      @default(false)
+    createdAt      DateTime     @default(now())
 }
