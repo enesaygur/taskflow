@@ -19,6 +19,7 @@ model User {
     refreshTokens           RefreshToken[]
     organizationMemberships OrganizationMember[]
     sentinvites             Invite[]
+    createdProjects         Project[]
 }
 
 model RefreshToken {
@@ -50,6 +51,7 @@ model Organization {
     createdAt DateTime             @default(now())
     members   OrganizationMember[]
     invites   Invite[]
+    projects  Project[]
 }
 
 model OrganizationMember {
@@ -75,5 +77,15 @@ model Invite {
     invitedBy      User         @relation(fields: [invitedById], references: [id])
     expiresAt      DateTime
     accepted       Boolean      @default(false)
+    createdAt      DateTime     @default(now())
+}
+
+model Project {
+    id             String       @id @default(uuid())
+    name           String
+    organizationId String
+    organization   Organization @relation(fields: [organizationId], references: [id])
+    createdById    String
+    createdBy      User         @relation(fields: [createdById], references: [id])
     createdAt      DateTime     @default(now())
 }
