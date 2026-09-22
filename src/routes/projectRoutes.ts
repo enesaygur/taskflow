@@ -1,7 +1,12 @@
 import { Router } from "express";
 import { authMiddleware } from "../middleware/authMiddleware";
 import { requireRole } from "../middleware/roleMiddleware";
-import { createProject, listProjects } from "../controllers/projectController";
+import {
+  createProject,
+  deleteProject,
+  listProjects,
+  updateProject,
+} from "../controllers/projectController";
 
 const router = Router({ mergeParams: true });
 
@@ -18,5 +23,12 @@ router.get(
   requireRole(["OWNER", "ADMIN", "MEMBER"]),
   listProjects,
 );
+router.put(
+  "/:id",
+  authMiddleware,
+  requireRole(["OWNER", "ADMIN"]),
+  updateProject,
+);
 
+router.delete("/:id", authMiddleware, requireRole(["OWNER", "ADMIN"]), deleteProject);
 export default router;

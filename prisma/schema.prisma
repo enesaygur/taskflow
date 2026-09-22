@@ -87,5 +87,6 @@ model Project {
     organization   Organization @relation(fields: [organizationId], references: [id])
     createdById    String
     createdBy      User         @relation(fields: [createdById], references: [id])
+    isArchived     Boolean      @default(false)
     createdAt      DateTime     @default(now())
 }
