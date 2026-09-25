@@ -38,11 +38,11 @@ export const updateProject = async (req: AuthRequest, res: Response) => {
     throw new AppError(parsed.error.issues[0].message, 400);
   }
 
-  const { id } = req.params as { id: string };
+  const { projectId } = req.params as { projectId: string };
   const { name } = parsed.data;
 
   const project = await prisma.project.update({
-    where: { id },
+    where: { id: projectId },
     data: { name },
   });
 
@@ -50,10 +50,10 @@ export const updateProject = async (req: AuthRequest, res: Response) => {
 };
 
 export const deleteProject = async (req: AuthRequest, res: Response) => {
-  const { id } = req.params as { id: string };
+  const { projectId } = req.params as { projectId: string };
 
   await prisma.project.update({
-    where: { id },
+    where: { id: projectId },
     data: { isArchived: true },
   });
   res.json({ message: "Project deleted successfully" });

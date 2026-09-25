@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { authMiddleware } from "../middleware/authMiddleware";
 import { requireRole } from "../middleware/roleMiddleware";
+import taskRoutes from "./taskRoutes";
+import labelRoutes from "./labelRoutes";
 import {
   createProject,
   deleteProject,
@@ -24,11 +26,19 @@ router.get(
   listProjects,
 );
 router.put(
-  "/:id",
+  "/:projectId",
   authMiddleware,
   requireRole(["OWNER", "ADMIN"]),
   updateProject,
 );
 
-router.delete("/:id", authMiddleware, requireRole(["OWNER", "ADMIN"]), deleteProject);
+router.delete(
+  "/:projectId",
+  authMiddleware,
+  requireRole(["OWNER", "ADMIN"]),
+  deleteProject,
+);
+router.use("/:projectId/tasks", taskRoutes);
+router.use("/:projectId/labels", labelRoutes);
+
 export default router;
