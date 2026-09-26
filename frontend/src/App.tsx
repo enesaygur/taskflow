@@ -1,8 +1,12 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 function App() {
   return (
-    <div>
-      <h1>TaskFlow</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<h1>TaskFlow</h1>}/>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
