@@ -5,9 +5,17 @@ import { errorHandler } from "./middleware/errorHandler";
 import organizationRoutes from "./routes/organizationRoutes";
 import { authMiddleware } from "./middleware/authMiddleware";
 import { acceptInvite } from "./controllers/inviteController";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 const app = express();
 const PORT = 3000;
-
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
+app.use(cookieParser());  
 app.use(express.json());
 app.use("/", homeRoutes);
 app.use("/auth", authRoutes);

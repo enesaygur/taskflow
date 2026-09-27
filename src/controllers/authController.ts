@@ -82,11 +82,17 @@ export const login = async (req: Request, res: Response) => {
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     },
   });
-  res.json({ accessToken, refreshToken: refreshTokenPlain });
+  res.cookie("refreshToken", refreshTokenPlain, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+  res.json({ accessToken });
 };
 
 export const refresh = async (req: Request, res: Response) => {
-  const { refreshToken } = req.body;
+  const refreshToken  = req.cookies.refreshToken;
 
   if (!refreshToken) {
     throw new AppError("Refresh token required", 400);
@@ -130,7 +136,13 @@ export const refresh = async (req: Request, res: Response) => {
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     },
   });
-  res.json({ accessToken: newAccessToken, refreshToken: newRefreshTokenPlain });
+  res.cookie("refreshToken", newRefreshTokenPlain, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+  res.json({ accessToken: newAccessToken });
 };
 
 export const verifyEmail = async (req: Request, res: Response) => {
@@ -163,7 +175,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
 };
 
 export const logout = async (req: Request, res: Response) => {
-  const { refreshToken } = req.body;
+  const  refreshToken  = req.cookies.refreshToken;
 
   if (!refreshToken) {
     throw new AppError("Refresh token required", 400);
@@ -183,5 +195,6 @@ export const logout = async (req: Request, res: Response) => {
       break;
     }
   }
+  res.clearCookie("refreshToken");
   res.json({ message: "Logged out successfully" });
 };
