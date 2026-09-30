@@ -28,3 +28,19 @@ export const createOrganization = async (req: AuthRequest, res: Response) => {
 
   res.status(201).json(organization);
 };
+
+export const listMyOrganizations = async (req: AuthRequest, res: Response) => {
+  const membership = await prisma.organizationMember.findMany({
+    where: { userId: req.userId as string },
+    include: {
+      organization: true,
+    },
+  });
+
+  const organizations = membership.map((m) => ({
+    ...m.organization,
+    myRole: m.role,
+  }));
+
+  res.json(organizations);
+};
