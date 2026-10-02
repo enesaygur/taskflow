@@ -54,7 +54,7 @@ function Projects() {
         {projects.map((project) => (
           <li key={project.id}>
             <Link
-              to={`/organizations/${organizationId}/projects/${project.id}`}
+              to={`/organizations/${organizationId}/projects/${project.id}/board`}
               className="block border p-3 rounded hover:bg-gray-50"
             >
               {project.name}

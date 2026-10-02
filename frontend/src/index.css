@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Manrope", system-ui, sans-serif;
+  --color-canvas: #ffffff;
+  --color-column: #f5f6f8;
+  --color-ink: #1a1d23;
+  --color-muted: #6b7280;
+  --color-line: #e2e4e9;
+  --color-accent: #0f766e;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+}

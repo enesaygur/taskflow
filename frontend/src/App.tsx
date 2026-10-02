@@ -6,6 +6,7 @@ import GuestRoute from "./components/GuestRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Organizations from "./pages/Organizations";
 import Projects from "./pages/Projects";
+import TaskBoard from "./pages/TaskBoard";
 
 function App() {
   return (
@@ -25,6 +26,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Projects />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/organizations/:organizationId/projects/:projectId/board"
+            element={
+              <ProtectedRoute>
+                <TaskBoard />
               </ProtectedRoute>
             }
           />

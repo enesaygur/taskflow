@@ -44,3 +44,16 @@ export const listMyOrganizations = async (req: AuthRequest, res: Response) => {
 
   res.json(organizations);
 };
+
+export const listMembers = async (req: AuthRequest, res: Response) => {
+  const organizationId = req.params.organizationId as string;
+
+  const members = await prisma.organizationMember.findMany({
+    where: { organizationId },
+    include: {
+      user: { select: { id: true, email: true } },
+    },
+  });
+
+  res.json(members);
+};
