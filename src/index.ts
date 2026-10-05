@@ -7,6 +7,7 @@ import { authMiddleware } from "./middleware/authMiddleware";
 import { acceptInvite } from "./controllers/inviteController";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { handleStripeWebhook } from "./controllers/billingController";
 const app = express();
 const PORT = 3000;
 app.use(
@@ -15,7 +16,12 @@ app.use(
     credentials: true,
   }),
 );
-app.use(cookieParser());  
+app.use(cookieParser());
+app.post(
+  "/billing/webhook",
+  express.raw({ type: "application/json" }),
+  handleStripeWebhook,
+);
 app.use(express.json());
 app.use("/", homeRoutes);
 app.use("/auth", authRoutes);

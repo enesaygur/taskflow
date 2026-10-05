@@ -4,6 +4,7 @@ import { createInviteSchema } from "../schemas/inviteSchema";
 import { AppError } from "../utils/AppError";
 import crypto from "crypto";
 import { prisma } from "../lib/prisma";
+import { PLAN_LIMITS } from "../constants/plans";
 
 export const createInvite = async (req: AuthRequest, res: Response) => {
   const parsed = createInviteSchema.safeParse(req.body);
@@ -58,6 +59,23 @@ export const acceptInvite = async (req: AuthRequest, res: Response) => {
   if (user?.email !== invite.email) {
     throw new AppError(
       "This invite was sent to a different email address",
+      403,
+    );
+  }
+
+  const organization = await prisma.organization.findUnique({
+    where: { id: invite.organizationId },
+    include: { _count: { select: { members: true } } },
+  });
+
+  if (!organization) {
+    throw new AppError("Organization not found", 404);
+  }
+
+  const limit = PLAN_LIMITS[organization.plan];
+  if (organization._count.members >= limit) {
+    throw new AppError(
+      `Member limit reached for ${organization.plan} plan. Upgrade your plan to add more members`,
       403,
     );
   }

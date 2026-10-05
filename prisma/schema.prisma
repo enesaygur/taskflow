@@ -47,13 +47,15 @@ enum Role {
 }
 
 model Organization {
-    id        String               @id @default(uuid())
-    name      String
-    plan      Plan                 @default(FREE)
-    createdAt DateTime             @default(now())
-    members   OrganizationMember[]
-    invites   Invite[]
-    projects  Project[]
+    id                   String               @id @default(uuid())
+    name                 String
+    plan                 Plan                 @default(FREE)
+    createdAt            DateTime             @default(now())
+    members              OrganizationMember[]
+    invites              Invite[]
+    projects             Project[]
+    stripeCustomerId     String?
+    stripeSubscriptionId String?
 }
 
 model OrganizationMember {
