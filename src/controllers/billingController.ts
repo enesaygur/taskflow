@@ -142,4 +142,3 @@ export const handleStripeWebhook = async (req: Request, res: Response) => {
 
   res.status(200).json({ received: true });
 };
-// yeni org açıp stripe yapmadan free de 4 davet yap 4. hata vermeli
