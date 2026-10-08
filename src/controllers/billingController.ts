@@ -33,7 +33,7 @@ export const createCheckoutSession = async (
 
     if (existingSubscription.status === "active") {
       throw new AppError(
-        "This organization already has an active subscription. Cancel it before subscribing again.",
+        "This organization already has an active subscription. Use 'Manage subscription' to change your plan.",
         409,
       );
     }
@@ -119,7 +119,12 @@ export const handleStripeWebhook = async (req: Request, res: Response) => {
       where: { stripeCustomerId: customerId },
     });
 
-    if (organization) {
+    const isOtherSubscription =
+      event.type !== "customer.subscription.created" &&
+      organization?.stripeSubscriptionId != null &&
+      organization?.stripeSubscriptionId !== subscription.id;
+
+    if (organization && !isOtherSubscription) {
       if (
         event.type === "customer.subscription.deleted" ||
         subscription.status !== "active"
@@ -141,4 +146,23 @@ export const handleStripeWebhook = async (req: Request, res: Response) => {
   }
 
   res.status(200).json({ received: true });
+};
+
+export const createPortalSession = async (req: AuthRequest, res: Response) => {
+  const organizationId = req.params.organizationId as string;
+
+  const organization = await prisma.organization.findUnique({
+    where: { id: organizationId },
+  });
+
+  if (!organization?.stripeCustomerId) {
+    throw new AppError("No billing account for this organization", 400);
+  }
+
+  const session = await stripe.billingPortal.sessions.create({
+    customer: organization.stripeCustomerId,
+    return_url: `http://localhost:5173/organizations/${organizationId}/billing`,
+  });
+
+  return res.json({ url: session.url });
 };

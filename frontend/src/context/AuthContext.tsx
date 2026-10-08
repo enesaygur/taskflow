@@ -1,7 +1,15 @@
-import { createContext, type ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import api from "../api/axios";
 
 interface AuthContextType {
   accessToken: string | null;
+  userId: string | null;
   login: (token: string) => void;
   logout: () => void;
 }
@@ -12,6 +20,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(
     localStorage.getItem("accessToken"),
   );
+
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (accessToken) {
+      api.get("/auth/me").then((res) => {
+        setUserId(res.data.id);
+      });
+    } else {
+      setUserId(null);
+    }
+  }, [accessToken]);
 
   const login = (token: string) => {
     localStorage.setItem("accessToken", token);
@@ -24,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ accessToken, login, logout }}>
+    <AuthContext.Provider value={{ accessToken, userId, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

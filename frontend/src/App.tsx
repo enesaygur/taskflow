@@ -7,6 +7,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Organizations from "./pages/Organizations";
 import Projects from "./pages/Projects";
 import TaskBoard from "./pages/TaskBoard";
+import Layout from "./components/Layout";
+import OrganizationSettings from "./pages/OrganizationSettings";
+import AcceptInvite from "./pages/AcceptInvite";
+import Billing from "./pages/Billing";
 
 function App() {
   return (
@@ -14,29 +18,30 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route
-            path="/"
             element={
               <ProtectedRoute>
-                <Organizations />
+                <Layout />
               </ProtectedRoute>
             }
-          />
-          <Route
-            path="/organizations/:organizationId/projects"
-            element={
-              <ProtectedRoute>
-                <Projects />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/organizations/:organizationId/projects/:projectId/board"
-            element={
-              <ProtectedRoute>
-                <TaskBoard />
-              </ProtectedRoute>
-            }
-          />
+          >
+            <Route path="/" element={<Organizations />} />
+            <Route
+              path="/organizations/:organizationId/projects"
+              element={<Projects />}
+            />
+            <Route
+              path="/organizations/:organizationId/projects/:projectId/board"
+              element={<TaskBoard />}
+            />
+            <Route
+              path="/organizations/:organizationId/settings"
+              element={<OrganizationSettings />}
+            />
+            <Route
+              path="/organizations/:organizationId/billing"
+              element={<Billing />}
+            />
+          </Route>
           <Route
             path="/login"
             element={
@@ -53,6 +58,7 @@ function App() {
               </GuestRoute>
             }
           />
+          <Route path="/invites/accept" element={<AcceptInvite />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

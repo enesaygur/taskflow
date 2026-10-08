@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { prisma } from "../lib/prisma";
 import jwt from "jsonwebtoken";
+import { AuthRequest } from "../middleware/authMiddleware";
 
 export const register = async (req: Request, res: Response) => {
   const parsed = registerSchema.safeParse(req.body);
@@ -92,7 +93,7 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const refresh = async (req: Request, res: Response) => {
-  const refreshToken  = req.cookies.refreshToken;
+  const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
     throw new AppError("Refresh token required", 400);
@@ -175,7 +176,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
 };
 
 export const logout = async (req: Request, res: Response) => {
-  const  refreshToken  = req.cookies.refreshToken;
+  const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
     throw new AppError("Refresh token required", 400);
@@ -197,4 +198,13 @@ export const logout = async (req: Request, res: Response) => {
   }
   res.clearCookie("refreshToken");
   res.json({ message: "Logged out successfully" });
+};
+
+export const getMe = async (req: AuthRequest, res: Response) => {
+  const user = await prisma.user.findUnique({
+    where: { id: req.userId },
+    select: { id: true, email: true },
+  });
+
+  res.json(user);
 };

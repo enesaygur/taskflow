@@ -105,18 +105,14 @@ function TaskBoard() {
 
   return (
     <div className="min-h-screen bg-canvas">
-      <header className="border-b border-line">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center gap-4">
-          <span className="font-semibold tracking-tight">TaskFlow</span>
-          <span className="text-line">/</span>
-          <Link
-            to={`/organizations/${organizationId}/projects`}
-            className="text-sm text-muted hover:text-ink"
-          >
-            Projects
-          </Link>
-        </div>
-      </header>
+      <div className="max-w-6xl mx-auto px-6 pt-4">
+        <Link
+          to={`/organizations/${organizationId}/projects`}
+          className="text-sm text-muted hover:text-ink"
+        >
+          ← Projects
+        </Link>
+      </div>
 
       <div className="max-w-6xl mx-auto px-6 py-8">
         <button

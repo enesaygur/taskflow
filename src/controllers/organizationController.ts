@@ -57,3 +57,17 @@ export const listMembers = async (req: AuthRequest, res: Response) => {
 
   res.json(members);
 };
+
+export const getOrganization = async (req: AuthRequest, res: Response) => {
+  const organizationId = req.params.organizationId as string;
+
+  const organization = await prisma.organization.findUnique({
+    where: { id: organizationId },
+  });
+
+  if (!organization) {
+    throw new AppError("Organization not found", 404);
+  }
+
+  res.json(organization);
+};

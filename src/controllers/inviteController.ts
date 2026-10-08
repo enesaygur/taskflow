@@ -30,7 +30,7 @@ export const createInvite = async (req: AuthRequest, res: Response) => {
   });
 
   console.log(
-    `Invite link: http://localhost:3000/invites/accept?token=${token}`,
+    `Invite link: http://localhost:5173/invites/accept?token=${token}`,
   );
   res
     .status(201)

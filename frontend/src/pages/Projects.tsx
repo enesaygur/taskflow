@@ -31,8 +31,14 @@ function Projects() {
   }
   return (
     <div className="max-w-2xl mx-auto mt-10 p-4">
-      <Link to="/" className="text-sm text-gray-500">
-        ← Organizasyonlar
+      <Link to="/" className="text-sm text-muted hover:text-ink">
+        ← Organizations
+      </Link>
+      <Link
+        to={`/organizations/${organizationId}/settings`}
+        className="text-sm text-muted hover:text-ink ml-4"
+      >
+        Settings
       </Link>
       <h1 className="text-2xl font-bold mb-4 mt-2">Projects</h1>
       <form onSubmit={handleCreate} className="flex gap-2 mb-6">
