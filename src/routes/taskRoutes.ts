@@ -14,6 +14,7 @@ import {
   addLabelToTask,
   removeLabelFromTask,
 } from "../controllers/labelController";
+import { requireTaskInProject } from "../middleware/resourceScope";
 
 const router = Router({ mergeParams: true });
 
@@ -29,6 +30,7 @@ router.get(
   requireRole(["OWNER", "ADMIN", "MEMBER"]),
   listTasks,
 );
+router.use("/:taskId", requireTaskInProject);
 router.patch(
   "/:taskId/move",
   authMiddleware,

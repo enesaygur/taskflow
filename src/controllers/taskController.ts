@@ -122,10 +122,18 @@ export const moveTask = async (req: AuthRequest, res: Response) => {
 
 export const assignUser = async (req: AuthRequest, res: Response) => {
   const taskId = req.params.taskId as string;
+  const organizationId = req.params.organizationId as string;
   const { userId } = req.body;
 
   if (!userId) {
     throw new AppError("User ID required", 400);
+  }
+
+  const membership = await prisma.organizationMember.findUnique({
+    where: { organizationId_userId: { organizationId, userId } },
+  });
+  if (!membership) {
+    throw new AppError("User is not a member of this organization", 400);
   }
 
   const existing = await prisma.taskAssignee.findUnique({

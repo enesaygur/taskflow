@@ -33,9 +33,17 @@ export const listLabels = async (req: AuthRequest, res: Response) => {
 export const addLabelToTask = async (req: AuthRequest, res: Response) => {
   const { taskId } = req.params as { taskId: string };
   const { labelId } = req.body;
+  const projectId = req.params.projectId as string;
 
   if (!labelId) {
     throw new AppError("Label ID required", 400);
+  }
+
+  const label = await prisma.label.findFirst({
+    where: { id: labelId, projectId },
+  });
+  if (!label) {
+    throw new AppError("Label not found", 404);
   }
 
   const taskLabel = await prisma.taskLabel.create({

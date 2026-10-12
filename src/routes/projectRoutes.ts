@@ -9,6 +9,7 @@ import {
   listProjects,
   updateProject,
 } from "../controllers/projectController";
+import { requireProjectInOrg } from "../middleware/resourceScope";
 
 const router = Router({ mergeParams: true });
 
@@ -29,6 +30,7 @@ router.put(
   "/:projectId",
   authMiddleware,
   requireRole(["OWNER", "ADMIN"]),
+  requireProjectInOrg,
   updateProject,
 );
 
@@ -36,9 +38,10 @@ router.delete(
   "/:projectId",
   authMiddleware,
   requireRole(["OWNER", "ADMIN"]),
+  requireProjectInOrg,
   deleteProject,
 );
-router.use("/:projectId/tasks", taskRoutes);
-router.use("/:projectId/labels", labelRoutes);
+router.use("/:projectId/tasks", requireProjectInOrg, taskRoutes);
+router.use("/:projectId/labels", requireProjectInOrg, labelRoutes);
 
 export default router;
