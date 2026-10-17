@@ -11,6 +11,7 @@ export const requireProjectInOrg = async (
   const project = await prisma.project.findFirst({
     where: {
       id: req.params.projectId as string,
+      organizationId: req.params.organizationId as string,
     },
   });
   if (!project) throw new AppError("Project not found", 404);
