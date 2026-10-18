@@ -6,7 +6,10 @@
   "scripts": {
     "test": "dotenv -e .env.test -- jest --runInBand",
     "db:test:migrate": "dotenv -e .env.test -- prisma migrate deploy",
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/index.js",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",

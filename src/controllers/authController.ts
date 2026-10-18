@@ -6,6 +6,7 @@ import crypto from "crypto";
 import { prisma } from "../lib/prisma";
 import jwt from "jsonwebtoken";
 import { AuthRequest } from "../middleware/authMiddleware";
+import {clearRefreshCookieOptions,refreshCookieOptions} from "../config/cookies";
 
 export const register = async (req: Request, res: Response) => {
   const parsed = registerSchema.safeParse(req.body);
@@ -83,12 +84,7 @@ export const login = async (req: Request, res: Response) => {
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     },
   });
-  res.cookie("refreshToken", refreshTokenPlain, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  res.cookie("refreshToken", refreshTokenPlain, refreshCookieOptions);
   res.json({ accessToken });
 };
 
@@ -137,12 +133,7 @@ export const refresh = async (req: Request, res: Response) => {
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     },
   });
-  res.cookie("refreshToken", newRefreshTokenPlain, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  res.cookie("refreshToken", newRefreshTokenPlain, refreshCookieOptions);
   res.json({ accessToken: newAccessToken });
 };
 
