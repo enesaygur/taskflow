@@ -14,6 +14,7 @@ function OrganizationSettings() {
   const [role, setRole] = useState<"ADMIN" | "MEMBER">("MEMBER");
   const [inviteError, setInviteError] = useState("");
   const [inviteSuccess, setInviteSuccess] = useState(false);
+  const [inviteLink, setInviteLink] = useState("");
 
   const fetchMembers = async () => {
     try {
@@ -38,14 +39,16 @@ function OrganizationSettings() {
     e.preventDefault();
     setInviteError("");
     setInviteSuccess(false);
+    setInviteLink("");
 
     try {
-      await api.post(`/organizations/${organizationId}/invites`, {
+      const res = await api.post(`/organizations/${organizationId}/invites`, {
         email,
         role,
       });
       setEmail("");
       setInviteSuccess(true);
+      setInviteLink(res.data.inviteLink);
 
       setTimeout(() => {
         setInviteSuccess(false);
@@ -120,6 +123,27 @@ function OrganizationSettings() {
               Invite
             </button>
           </form>
+          {inviteLink && (
+            <div className="mt-3 border border-line rounded p-3">
+              <p className="text-sm text-muted mb-2">
+                Share this link with the invited person:
+              </p>
+              <div className="flex gap-2">
+                <input
+                  readOnly
+                  value={inviteLink}
+                  className="border border-line rounded px-2 py-1.5 text-xs flex-1"
+                />
+                <button
+                  type="button"
+                  onClick={() => navigator.clipboard.writeText(inviteLink)}
+                  className="text-sm px-3 rounded border border-line"
+                >
+                  Copy
+                </button>
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>

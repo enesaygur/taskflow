@@ -30,10 +30,13 @@ export const createInvite = async (req: AuthRequest, res: Response) => {
     },
   });
 
-  console.log(`Invite link: ${FRONTEND_URL}/invites/accept?token=${token}`);
-  res
-    .status(201)
-    .json({ message: "Invite sent successfully", inviteId: invite.id });
+  const inviteLink = `${FRONTEND_URL}/invites/accept?token=${token}`;
+  console.log(`Invite link: ${inviteLink}`);
+  res.status(201).json({
+    message: "Invite sent successfully",
+    inviteId: invite.id,
+    inviteLink,
+  });
 };
 
 export const acceptInvite = async (req: AuthRequest, res: Response) => {

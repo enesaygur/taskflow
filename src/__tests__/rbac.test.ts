@@ -28,6 +28,7 @@ describe("role based access control", () => {
       .send({ email: "new@test.com", role: "MEMBER" });
 
     expect(res.status).toBe(201);
+    expect(res.body.inviteLink).toContain("/invites/accept?token=");
   });
 
   it("stops a member from inviting", async () => {
