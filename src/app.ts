@@ -8,12 +8,13 @@ import { acceptInvite } from "./controllers/inviteController";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { handleStripeWebhook } from "./controllers/billingController";
+import { FRONTEND_URL } from "./config/env";
 
 const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: FRONTEND_URL,
     credentials: true,
   }),
 );

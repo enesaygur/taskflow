@@ -5,6 +5,7 @@ import { AppError } from "../utils/AppError";
 import crypto from "crypto";
 import { prisma } from "../lib/prisma";
 import { PLAN_LIMITS } from "../constants/plans";
+import { FRONTEND_URL } from "../config/env";
 
 export const createInvite = async (req: AuthRequest, res: Response) => {
   const parsed = createInviteSchema.safeParse(req.body);
@@ -29,9 +30,7 @@ export const createInvite = async (req: AuthRequest, res: Response) => {
     },
   });
 
-  console.log(
-    `Invite link: http://localhost:5173/invites/accept?token=${token}`,
-  );
+  console.log(`Invite link: ${FRONTEND_URL}/invites/accept?token=${token}`);
   res
     .status(201)
     .json({ message: "Invite sent successfully", inviteId: invite.id });

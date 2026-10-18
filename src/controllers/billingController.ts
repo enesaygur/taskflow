@@ -4,6 +4,7 @@ import { AppError } from "../utils/AppError";
 import { prisma } from "../lib/prisma";
 import { stripe } from "../lib/stripe";
 import { PRICE_TO_PLAN } from "../constants/plans";
+import { FRONTEND_URL } from "../config/env";
 
 export const createCheckoutSession = async (
   req: AuthRequest,
@@ -67,14 +68,8 @@ export const createCheckoutSession = async (
     mode: "subscription",
     customer: customerId,
     line_items: [{ price: priceId, quantity: 1 }],
-    success_url:
-      "http://localhost:5173/organizations/" +
-      organizationId +
-      "/billing?success=true",
-    cancel_url:
-      "http://localhost:5173/organizations/" +
-      organizationId +
-      "/billing?cancalled=true",
+    success_url: `${FRONTEND_URL}/organizations/${organizationId}/billing?success=true`,
+    cancel_url: `${FRONTEND_URL}/organizations/${organizationId}/billing?canceled=true`,
     metadata: { organizationId },
   });
 
@@ -161,7 +156,7 @@ export const createPortalSession = async (req: AuthRequest, res: Response) => {
 
   const session = await stripe.billingPortal.sessions.create({
     customer: organization.stripeCustomerId,
-    return_url: `http://localhost:5173/organizations/${organizationId}/billing`,
+    return_url: `${FRONTEND_URL}/organizations/${organizationId}/billing`,
   });
 
   return res.json({ url: session.url });
