@@ -15,13 +15,11 @@ const router = Router();
 router.post(
   "/",
   authMiddleware,
-  requireRole(["OWNER", "ADMIN", "MEMBER"]),
   createOrganization,
 );
 router.get(
   "/",
   authMiddleware,
-  requireRole(["OWNER", "ADMIN", "MEMBER"]),
   listMyOrganizations,
 );
 router.get(
